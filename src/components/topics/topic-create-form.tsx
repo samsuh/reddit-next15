@@ -20,12 +20,14 @@ export default function TopicCreateForm() {
             <h3 className='text-lg'>Create a Topic</h3>
             <Input
               id='name'
+              name='name'
               label='Name'
               labelPlacement='outside'
               placeholder='name'
             />
             <Textarea
               id='description'
+              name='description'
               label='Description'
               labelPlacement='outside'
               placeholder='Enter description'
