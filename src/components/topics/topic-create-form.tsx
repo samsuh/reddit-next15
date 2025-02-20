@@ -11,9 +11,10 @@ import {
   Form,
 } from '@heroui/react'
 import * as actions from '@/actions'
+import FormButton from '@/components/common/form-button'
 
 export default function TopicCreateForm() {
-  const [formState, action] = useActionState(actions.createTopic, {
+  const [formState, action, isPending] = useActionState(actions.createTopic, {
     errors: {},
   })
 
@@ -32,10 +33,9 @@ export default function TopicCreateForm() {
           <Button color='primary'>New Topic</Button>
         </PopoverTrigger>
         <PopoverContent>
-          <Form action={action} onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
             <h3 className='text-lg'>Create a Topic</h3>
             <Input
-              id='name'
               name='name'
               label='Name'
               labelPlacement='outside'
@@ -44,7 +44,6 @@ export default function TopicCreateForm() {
               errorMessage={formState.errors.name?.join(', ')}
             />
             <Textarea
-              id='description'
               name='description'
               label='Description'
               labelPlacement='outside'
@@ -57,7 +56,7 @@ export default function TopicCreateForm() {
                 {formState.errors._form.join(', ')}
               </div>
             ) : null}
-            <Button type='submit'>Submit</Button>
+            <FormButton isLoading={isPending}>Save</FormButton>
           </Form>
         </PopoverContent>
       </Popover>
