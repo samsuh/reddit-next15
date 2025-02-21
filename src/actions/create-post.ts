@@ -1,7 +1,12 @@
 'use server'
 
 import { auth } from '@/auth'
+import { db } from '@/db'
+import { Post } from '@prisma/client'
+import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
+import paths from '@/paths'
+import { redirect } from 'next/navigation'
 
 const createPostSchema = z.object({
   title: z.string().min(3),
@@ -31,7 +36,7 @@ export async function createPost(
   }
 
   const session = await auth()
-  if (!session || !session.user) {
+  if (!session || !session.user || !session.user.id) {
     return {
       errors: {
         _form: ['You must be signed in to do this'],
@@ -39,7 +44,36 @@ export async function createPost(
     }
   }
 
-  return { errors: {} }
+  //access db to find the associated topicId from the slug we have
+  const topic = await db.topic.findFirst({
+    where: {
+      slug,
+    },
+  })
+  if (!topic) {
+    return { errors: { _form: ['Topic could not be found'] } }
+  }
 
-  //REVALIDATE TOPIC SHOW PAGE
+  //actually create the post
+  let post: Post
+  try {
+    post = await db.post.create({
+      data: {
+        title: result.data.title,
+        content: result.data.content,
+        userId: session.user.id,
+        topicId: topic.id,
+      },
+    })
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return { errors: { _form: [err.message] } }
+    } else {
+      return {
+        errors: { _form: ['Something went wrong. Failed to create post'] },
+      }
+    }
+  }
+  revalidatePath(paths.topicShow(slug))
+  redirect(paths.postShow(slug, post.id))
 }
