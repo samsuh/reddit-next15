@@ -17,6 +17,11 @@ export default async function PostList({ fetchData }: PostListProps) {
 
     return (
       <div key={post.id} className='border rounded p-2'>
+        <p>
+          PostList receives fetchData from TopicShowPage with the appropriate
+          function to call to fetchData, using either "fetchDataByTopicSlug" or
+          the TopPosts one for HomePage by "TopPost"
+        </p>
         <Link href={paths.postShow(topicSlug, post.id)}>
           <h3 className='text-lg font-bold'>{post.title}</h3>
           <div className='flex flex-row gap-8'>
