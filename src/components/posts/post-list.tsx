@@ -1,13 +1,13 @@
-import type { PostWithData } from '@/db/queries/posts'
+import type { PostWithAdditionalDataForListDisplay } from '@/db/queries/posts'
 import Link from 'next/link'
 import paths from '@/paths'
 
 interface PostListProps {
-  fetchData: () => Promise<PostWithData[]>
+  fetchData: () => Promise<PostWithAdditionalDataForListDisplay[]>
 }
 
 export default async function PostList({ fetchData }: PostListProps) {
-  const posts = fetchData()
+  const posts = await fetchData()
 
   const renderedPosts = (await posts).map((post) => {
     const topicSlug = post.topic.slug
