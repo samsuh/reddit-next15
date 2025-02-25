@@ -35,3 +35,18 @@ export function fetchTopPosts(): Promise<
     take: 5,
   })
 }
+
+export function fetchPostBySearchTerm(
+  term: string
+): Promise<PostWithAdditionalDataForListDisplay[]> {
+  return db.post.findMany({
+    include: {
+      topic: { select: { slug: true } },
+      user: { select: { name: true, image: true } },
+      _count: { select: { comments: true } },
+    },
+    where: {
+      OR: [{ title: { contains: term } }, { content: { contains: term } }],
+    },
+  })
+}
