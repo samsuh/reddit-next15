@@ -57,6 +57,9 @@ export async function createPost(
   //actually create the post
   let post: Post
   try {
+    {
+      console.log('Session user id: ', session.user.id)
+    }
     post = await db.post.create({
       data: {
         title: result.data.title,

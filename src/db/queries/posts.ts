@@ -50,3 +50,18 @@ export function fetchPostBySearchTerm(
     },
   })
 }
+
+export function fetchPostByUserId(
+  userId: string
+): Promise<PostWithAdditionalDataForListDisplay[]> {
+  return db.post.findMany({
+    include: {
+      topic: { select: { slug: true } },
+      user: { select: { name: true, image: true } },
+      _count: { select: { comments: true } },
+    },
+    where: {
+      userId: userId,
+    },
+  })
+}
