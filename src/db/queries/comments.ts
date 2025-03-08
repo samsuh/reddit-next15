@@ -23,19 +23,18 @@ export const fetchCommentsByPostId = cache(
   }
 )
 
-//REFACTORED from this. turned into arrow function and wrapped with react's cache function
-// export function fetchCommentsByPostId(
-//   postId: string
-// ): Promise<CommentWithAuthor[]> {
-//   return db.comment.findMany({
-//     where: { postId },
-//     include: {
-//       user: {
-//         select: {
-//           name: true,
-//           image: true,
-//         },
-//       },
-//     },
-//   })
-// }
+export function fetchCommentsByUserId(
+  userId: string
+): Promise<CommentWithAuthor[]> {
+  return db.comment.findMany({
+    where: { userId },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+  })
+}
